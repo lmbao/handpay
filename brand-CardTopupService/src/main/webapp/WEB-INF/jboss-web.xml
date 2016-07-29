@@ -1,0 +1,3 @@
+<jboss-web>
+  <context-root>brand-CardTopupService</context-root>
+</jboss-web>

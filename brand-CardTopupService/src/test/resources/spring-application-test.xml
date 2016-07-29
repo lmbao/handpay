@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass">
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>jdbc:oracle:thin:@10.48.171.10:1521:hpdb59</value>
+		</property>
+		<property name="user">
+			<value>brand</value>
+		</property>
+		<property name="password">
+			<value>brand</value>
+		</property>
+		<property name="minPoolSize">
+			<value>1</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>50</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>1800</value>
+		</property>
+		<property name="acquireIncrement">
+			<value>2</value>
+		</property>
+		<property name="maxStatements">
+			<value>0</value>
+		</property>
+		<property name="initialPoolSize">
+			<value>5</value>
+		</property>
+		<property name="idleConnectionTestPeriod">
+			<value>1800</value>
+		</property>
+		<property name="acquireRetryAttempts">
+			<value>300000</value>
+		</property>
+		<property name="breakAfterAcquireFailure">
+			<value>true</value>
+		</property>
+		<property name="testConnectionOnCheckout">
+			<value>false</value>
+		</property>
+	</bean> -->
+	
+	<!-- DBCP数据库连接池的默认配置 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- MySQL数据源驱动类 -->
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@10.48.171.10:1521:hpdb59" />
+		<property name="username" value="brand" />
+		<property name="password" value="brand" />
+		
+		<!-- 连接池创建的连接的默认的auto-commit状态 -->
+		<property name="defaultAutoCommit" value="true" />
+		<!-- 初始化连接数 -->
+		<property name="initialSize" value="1" />
+		<!-- 最大活动连接数 -->
+		<property name="maxActive" value="10" />
+		<!-- 最大空闲连接数 -->
+		<property name="maxIdle" value="10" />
+		<!-- 最小空闲连接数 -->
+		<property name="minIdle" value="1" />
+		<!-- 没有可用连接时的最大等待时间，单位毫秒，-1无限等待 -->
+		<property name="maxWait" value="-1" />
+		<!-- 在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位. 如果设置为非正数,则不运行空闲连接回收器线程 -->
+		<property name="timeBetweenEvictionRunsMillis" value="-1" />
+		<!-- 在每次空闲连接回收器线程(如果有)运行时检查的连接数量 -->
+		<property name="numTestsPerEvictionRun" value="3" />
+		<!-- 连接在池中保持空闲而不被空闲连接回收器线程(如果有)回收的最小时间值，单位毫秒（注意：此值必须小于DB wait_timeout，否则连接将会超时失效。） -->
+		<!-- show variables like 'wait_timeout'; (MYSQL默认值: 28800 秒！)-->
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+	</bean>
+
+
+	<!-- 配置事务管理器，注意这里的dataSource和SqlSessionFactoryBean的dataSource要一致，不然事务就没有作用了 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- 配置SqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:sqlmap/*.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 通过扫描的模式，扫描目录在com.handpay.dao目录下所有的dao -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.handpay.obm.cardtopup.mapper" />
+	</bean>
+	
+	<!-- bean扫描加载 -->
+	<context:component-scan base-package="com.handpay.obm.catalogue, com.handpay.framework.locks.zookeeper" />
+</beans>
+
+
+

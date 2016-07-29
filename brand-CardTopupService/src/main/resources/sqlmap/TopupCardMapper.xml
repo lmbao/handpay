@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.handpay.obm.cardtopup.mapper.TopupCardMapper">
+
+	<resultMap id="BaseResultMap" type="com.handpay.obm.cardtopup.domain.TopupCard">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="card_order_id" property="cardOrderId" jdbcType="VARCHAR" />
+		<result column="card_mdse" property="cardMdse" jdbcType="VARCHAR" />
+		<result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+		<result column="card_pwd" property="cardPwd" jdbcType="VARCHAR" />
+		<result column="cost" property="cost" jdbcType="DECIMAL" />
+		<result column="ctime" property="ctime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id ,
+		create_time ,
+		order_id ,
+		card_order_id,
+		card_mdse ,
+		card_no ,
+		card_pwd ,
+		cost,
+		ctime
+	</sql>
+
+	<select id="getIdSeq" resultType="java.lang.Integer"> select seq_topup_card.nextval from dual </select>
+
+	<insert id="insert" parameterType="com.handpay.obm.cardtopup.domain.TopupCard">
+		insert into topup_card (
+		id ,
+		create_time ,
+		order_id ,
+		card_order_id,
+		card_mdse ,
+		card_no ,
+		card_pwd ,
+		cost ,
+		ctime
+		)
+		values (
+		#{id,jdbcType=INTEGER},
+		#{createTime,jdbcType=VARCHAR},
+		#{orderId,jdbcType=INTEGER},
+		#{cardOrderId,jdbcType=VARCHAR},
+		#{cardMdse,jdbcType=VARCHAR},
+		#{cardNo,jdbcType=VARCHAR},
+		#{cardPwd,jdbcType=VARCHAR},
+		#{cost,jdbcType=DECIMAL},
+		#{ctime,jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="brand-CardTopupService" />
+
+	<dubbo:registry id="brandzk" protocol="zookeeper" address="${brand.registry.address}"
+		file="${user.home}/.dubbo-cache/provider-brand-CardTopupService-brandzk-${env.num}" group="dubbo-${env_path}" />
+
+	<dubbo:registry id="mallzk" protocol="zookeeper" address="${mall.registry.address}"
+		file="${user.home}/.dubbo-cache/consumer-brand-GascardService-mallzk-${env.num}" group="dubbo-${env_path}" check="false"
+		default="false" />
+
+	<dubbo:protocol name="dubbo" port="-1" threadpool="cached" threads="500" accepts="500" />
+
+	<dubbo:provider timeout="${brand.provider.timeout}" retries="2" p:server-env-num="${env.num}" />
+
+	<dubbo:consumer check="false" timeout="${mall.consumer.timeout}" retries="0" p:client-env-num="${env.num}" />
+
+	<dubbo:annotation package="com.handpay.obm.cardtopup" />
+
+</beans>

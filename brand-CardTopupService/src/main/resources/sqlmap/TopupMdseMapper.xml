@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.handpay.obm.cardtopup.mapper.TopupMdseMapper">
+
+	<resultMap id="BaseResultMap" type="com.handpay.obm.cardtopup.domain.TopupMdse">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="topup_type" property="topupType" jdbcType="VARCHAR" />
+		<result column="topup_amount" property="topupAmount" jdbcType="INTEGER" />
+		<result column="card_mdse" property="cardMdse" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,
+		topup_mdse,
+		topup_amount,
+		card_mdse,
+		status
+	</sql>
+
+	<select id="selectByTopupAmount" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from topup_mdse
+		where topup_type = #{topupType} and topup_amount = #{topupAmount}
+	</select>
+
+</mapper>
